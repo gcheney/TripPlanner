@@ -4,18 +4,18 @@
 <head>
   <title>Trip Planner - @ViewBag.Title</title>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="css/site.css" />
+  <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
 <body>
 
   <div id="sidebar">
-    <img src="img/user1.jpg" alt="headshot" class="headshot" />
+    <img src="~/img/user1.jpg" alt="headshot" class="headshot" />
     <span>Generic User</span>
     <ul class="menu">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Contact</a></li>
+      <li class="active"><a asp-controller="Home" asp-action="Index">Home</a></li>
+      <li><a asp-controller="Home" asp-action="About">About</a></li>
+      <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
     </ul>
   </div>
 
@@ -31,8 +31,10 @@
     </div>
   </div>
 
-  <script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript" src="js/site.js"></script>
+  <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+  @RenderSection("scripts", false)
+
+  <script type="text/javascript" src="~/js/site.js"></script>
 </body>
 
 </html>
