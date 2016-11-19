@@ -4,15 +4,21 @@
 <head>
   <title>Trip Planner - @ViewBag.Title</title>
   <meta charset="utf-8" />
+
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="~/lib/bootswatch/yeti/bootstrap.min.css" />
+  <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
   <link rel="stylesheet" href="~/css/site.css" />
+
 </head>
 
 <body>
 
+
   <div id="sidebar">
     <img src="~/img/user1.jpg" alt="headshot" class="headshot" />
-    <span>Generic User</span>
-    <ul class="menu">
+    <span id="username">Generic User</span>
+    <ul class="nav">
       <li class="active"><a asp-controller="Home" asp-action="Index">Home</a></li>
       <li><a asp-controller="Home" asp-action="About">About</a></li>
       <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
@@ -20,21 +26,48 @@
   </div>
 
   <div id="wrapper">
-    <div id="main">
-        <div>
-            <button id="menuToggle">Hide Menu</button>
-        </div>
-            @RenderBody()
-        <div id="footer">
-            &copy; 2015 Trip Planner Ltd.
-        </div>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav navbar-left">
+          <li>
+            <button id="sidebarToggle" class="btn btn-primary">
+              <i class="fa fa-angle-left"></i>
+            </button>
+          </li>
+        </ul>
+        <a asp-controller="App" asp-action="Index" class="navbar-brand">Trip Planner</a>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="#" class="btn btn-sm btn-info">
+              <i class="fa fa-save"></i> Save
+            </a>
+          </li>
+          <li>
+            <a href="#" class="btn btn-sm btn-info">
+              <i class="fa fa-print"></i> Print
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div id="main" class="container-fluid">
+      <div>
+        @RenderBody()
+      </div>
+    </div>
+    <div id="footer" class="container-fluid">
+      <div class="navbar navbar-inverse navbar-fixed-bottom">
+        <h4 class="text-center text-info">&copy; 2015 Trip Planner Ltd.</h4>
+      </div>
     </div>
   </div>
 
-  <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
   @RenderSection("scripts", false)
 
-  <script type="text/javascript" src="~/js/site.js"></script>
+  <script src="~/js/site.js"></script>
 </body>
 
 </html>

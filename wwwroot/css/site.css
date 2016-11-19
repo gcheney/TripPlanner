@@ -1,4 +1,5 @@
 /* site.css */
+/*
 body {
   font-family: sans-serif;
   font-size: 14px;
@@ -13,6 +14,7 @@ label {
 input[type=text], input[type=password], textarea {
   width: 150px;
 }
+*/
 
 #main {
   background-color: #eee;
@@ -47,6 +49,10 @@ input[type=text], input[type=password], textarea {
       font-weight: bold;
     }
 
+    .menu li a {
+      color: #eee;
+    }
+
 #sidebar {
   background: #2a2c36;
   color: #eee;
@@ -56,20 +62,40 @@ input[type=text], input[type=password], textarea {
   overflow: hidden;
   left: 0;
   margin: 0;
-  transition: margin-left ease .35s;
+  -moz-transition: left ease .25s;
+  -o-transition: left ease .25s;
+  -webkit-transition: left ease .25s;
+  transition: left ease .25s;
 }
 
   #sidebar.hide-sidebar {
     left: -250px;
+    -moz-transition: left ease .25s;
+    -o-transition: left ease .25s;
+    -webkit-transition: left ease .25s;
     transition: left ease .25s;
+  }
+
+  #sidebarToggle {
+    margin: 5px;
   }
 
 #wrapper {
   margin: 0 0 0 250px;
-  transition: margin-left ease .15s;
+  -moz-transition: margin-left ease .25s;
+  -o-transition: margin-left ease .25s;
+  -webkit-transition: margin-left ease .25s;
+  transition: margin-left ease .25s;
 }
 
   #wrapper.hide-sidebar {
     margin-left: 0;
+    -moz-transition: margin-left ease .25s;
+    -o-transition: margin-left ease .25s;
+    -webkit-transition: margin-left ease .25s;
     transition: margin-left ease .25s;
   }
+
+.field-validation-error, .validation-summary-errors {
+  color: crimson;
+}

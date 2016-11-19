@@ -1,21 +1,28 @@
 @{
-    ViewBag.Title = "Home Page";
+  ViewBag.Title = "Home Page";
 }
+<div class="row">
+  <div class="col-md-6">
+    <h1>Trip Planner</h1>
+    <p>Plan your trips around the world</p>
 
-<h1>Trip Planner</h1>
-<p>This will be a fun website soon!</p>
-
-<form>
-    <div>
+    <form>
+      <div class="form-group">
         <label>Date</label>
-        <input />
-    </div>
-    <div>
+        <input class="form-control" />
+      </div>
+      <div class="form-group">
         <label>Location</label>
-        <input />
-    </div>
-    <div>
-        <input type="submit" value="Add" />
-    </div>
-</form>
+        <input class="form-control" />
+      </div>
+      <div><input type="submit" value="Add" class="btn btn-success" /></div>
+    </form>
+  </div>
+
+  <div class="col-md-6">
+    <h2>The Map</h2>
+  </div>
+
+</div>
+
 
