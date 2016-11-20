@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TripPlanner.Services;
 using TripPlanner.ViewModels;
+using TripPlanner.Data;
 
 namespace TripPlanner.Controllers.Web
 {
@@ -14,16 +15,20 @@ namespace TripPlanner.Controllers.Web
   {
     private IMailService _mailService;
     private IConfigurationRoot _config;
+    private TripPlannerContext _context;
 
-    public HomeController(IMailService mailService, IConfigurationRoot config)
+    public HomeController(IMailService mailService, IConfigurationRoot config, 
+      TripPlannerContext context)
     {
       _mailService = mailService;
       _config = config;
+      _context = context;
     }
 
     public IActionResult Index()
     {
-      return View();
+      var data = _context.Trips.ToList();
+      return View(data);
     }
 
     public IActionResult Contact()

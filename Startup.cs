@@ -36,6 +36,7 @@ namespace TripPlanner
             services.AddSingleton(_config);
             services.AddDbContext<TripPlannerContext>(options =>
                 options.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+            services.AddTransient<TripPlannerSeedData>();
             
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
             {
@@ -49,7 +50,8 @@ namespace TripPlanner
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+            ILoggerFactory loggerFactory, TripPlannerSeedData seeder)
         {
             loggerFactory.AddConsole();
 
@@ -67,6 +69,8 @@ namespace TripPlanner
                     defaults: new { controller = "Home", action = "Index" }
                 );
             });
+
+            seeder.EnsureSeedData().Wait();
         }
     }
 }
