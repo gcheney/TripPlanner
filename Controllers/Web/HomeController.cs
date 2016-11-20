@@ -15,19 +15,19 @@ namespace TripPlanner.Controllers.Web
   {
     private IMailService _mailService;
     private IConfigurationRoot _config;
-    private TripPlannerContext _context;
+    private ITripPlannerRepository _repo;
 
     public HomeController(IMailService mailService, IConfigurationRoot config, 
-      TripPlannerContext context)
+      ITripPlannerRepository repo)
     {
       _mailService = mailService;
       _config = config;
-      _context = context;
+      _repo = repo;
     }
 
     public IActionResult Index()
     {
-      var data = _context.Trips.ToList();
+      var data = _repo.GetAllTrips();
       return View(data);
     }
 
