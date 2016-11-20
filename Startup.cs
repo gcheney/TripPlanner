@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using TripPlanner.Services;
+using TripPlanner.Data;
 
 namespace TripPlanner
 {
@@ -24,7 +26,7 @@ namespace TripPlanner
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(_env.ContentRootPath)
-                .AddJsonFile("config.json");
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             _config = builder.Build();
         }
@@ -32,7 +34,9 @@ namespace TripPlanner
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_config);
-
+            services.AddDbContext<TripPlannerContext>(options =>
+                options.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+            
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
             {
                 services.AddScoped<IMailService, DebugMailService>();
