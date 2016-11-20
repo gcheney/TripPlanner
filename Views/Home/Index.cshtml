@@ -1,4 +1,4 @@
-@model System.Collections.Generic.List<TripPlanner.Models.Trip>
+@model IEnumerable<TripPlanner.Models.Trip>
 @{
   ViewBag.Title = "Home Page";
 }
@@ -22,6 +22,13 @@
 
   <div class="col-md-6">
     <h2>The Map</h2>
+
+    <ul>
+      @foreach (var trip in Model)
+      {
+        <li>@trip.Name : @trip.DateCreated.ToString("d")</li>
+      }
+    </ul>
   </div>
 
 </div>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using TripPlanner.Services;
 using TripPlanner.ViewModels;
 using TripPlanner.Data;
@@ -16,19 +17,31 @@ namespace TripPlanner.Controllers.Web
     private IMailService _mailService;
     private IConfigurationRoot _config;
     private ITripPlannerRepository _repo;
+    private ILogger<HomeController> _logger;
 
-    public HomeController(IMailService mailService, IConfigurationRoot config, 
-      ITripPlannerRepository repo)
+    public HomeController(IMailService mailService, 
+      IConfigurationRoot config, 
+      ITripPlannerRepository repo, 
+      ILogger<HomeController> logger)
     {
       _mailService = mailService;
       _config = config;
       _repo = repo;
+      _logger = logger;
     }
 
     public IActionResult Index()
     {
-      var data = _repo.GetAllTrips();
-      return View(data);
+      try 
+      {
+        var data = _repo.GetAllTrips();
+        return View(data);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError($"Failed to get all trips in the Index page: {ex.Message}");
+        return Redirect("/error");
+      }
     }
 
     public IActionResult Contact()

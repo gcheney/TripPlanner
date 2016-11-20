@@ -34,9 +34,13 @@ namespace TripPlanner
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_config);
+
             services.AddDbContext<TripPlannerContext>(options =>
                 options.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+
             services.AddTransient<TripPlannerSeedData>();
+
+            services.AddScoped<ITripPlannerRepository, TripPlannerRepository>();
             
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
             {
@@ -47,7 +51,10 @@ namespace TripPlanner
                 // use actual mail service
                 services.AddScoped<IMailService, DebugMailService>();
             }
+
             services.AddMvc();
+
+            services.AddLogging();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
@@ -58,6 +65,11 @@ namespace TripPlanner
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                loggerFactory.AddDebug(LogLevel.Information);
+            }
+            else 
+            {
+                loggerFactory.AddDebug(LogLevel.Error);
             }
 
             app.UseStaticFiles();
