@@ -27,9 +27,14 @@ namespace TripPlanner.Controllers.Api
         }
 
         [HttpPost("")]
-        public IActionResult Post([FromBody]Trip newTrip)
+        public IActionResult Post([FromBody]TripViewModel newTrip)
         {
-            return Ok(true);
+            if (ModelState.IsValid) 
+            {
+                return Created($"api/trips/{newTrip.Name}", newTrip);
+            }
+
+            return BadRequest(ModelState);
         }
     }
 }
