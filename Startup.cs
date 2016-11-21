@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using TripPlanner.Services;
 using TripPlanner.Data;
 
@@ -52,7 +53,11 @@ namespace TripPlanner
                 services.AddScoped<IMailService, DebugMailService>();
             }
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(config => {
+                    config.SerializerSettings.ContractResolver 
+                        = new CamelCasePropertyNamesContractResolver();
+                });
 
             services.AddLogging();
         }
