@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using TripPlanner.Services;
 using TripPlanner.ViewModels;
 using TripPlanner.Data;
+using AutoMapper;
 
 namespace TripPlanner.Controllers.Web
 {
@@ -34,8 +35,9 @@ namespace TripPlanner.Controllers.Web
     {
       try 
       {
-        var data = _repo.GetAllTrips();
-        return View(data);
+        var trips = _repo.GetAllTrips();
+        var mappedTrips = Mapper.Map<IEnumerable<TripViewModel>>(trips);
+        return View(mappedTrips);
       }
       catch (Exception ex)
       {

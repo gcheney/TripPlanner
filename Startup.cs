@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using TripPlanner.Services;
 using TripPlanner.Data;
+using TripPlanner.Models;
+using TripPlanner.ViewModels;
+using AutoMapper;
 
 namespace TripPlanner
 {
@@ -76,6 +79,12 @@ namespace TripPlanner
             {
                 loggerFactory.AddDebug(LogLevel.Error);
             }
+
+            // mapping
+            Mapper.Initialize(config => 
+            {
+                config.CreateMap<TripViewModel, Trip>().ReverseMap();
+            });
 
             app.UseStaticFiles();
 

@@ -8,6 +8,7 @@ using TripPlanner.Services;
 using TripPlanner.Models;
 using TripPlanner.ViewModels;
 using TripPlanner.Data;
+using AutoMapper;
 
 namespace TripPlanner.Controllers.Api
 {
@@ -23,15 +24,26 @@ namespace TripPlanner.Controllers.Api
         [HttpGet("")]
         public IActionResult Get()
         {
-            return Ok(_repository.GetAllTrips());
+            try 
+            {
+                var trips = _repository.GetAllTrips();
+                return Ok(Mapper.Map<IEnumerable<TripViewModel>>(trips));
+            }
+            catch (Exception ex)
+            {
+                // TODO logging
+
+                return BadRequest("Error Occured");
+            }
         }
 
         [HttpPost("")]
-        public IActionResult Post([FromBody]TripViewModel newTrip)
+        public IActionResult Post([FromBody]TripViewModel tripViewModel)
         {
             if (ModelState.IsValid) 
             {
-                return Created($"api/trips/{newTrip.Name}", newTrip);
+                var newTrip = Mapper.Map<Trip>(tripViewModel);
+                return Created($"api/trips/{newTrip.Name}", Mapper.Map<TripViewModel>(newTrip));
             }
 
             return BadRequest(ModelState);
