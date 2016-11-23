@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TripPlanner.Services;
 using TripPlanner.Models;
 using TripPlanner.ViewModels;
@@ -16,13 +16,16 @@ namespace TripPlanner.Controllers.Api
     public class TripsController : Controller
     {
         private ITripPlannerRepository _repository;
-        public TripsController(ITripPlannerRepository repository)
+        private ILogger<TripsController> _logger;
+
+        public TripsController(ITripPlannerRepository repository, ILogger<TripsController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         [HttpGet("")]
-        public IActionResult Get()
+        public IActionResult GetAll()
         {
             try 
             {
@@ -31,19 +34,25 @@ namespace TripPlanner.Controllers.Api
             }
             catch (Exception ex)
             {
-                // TODO logging
-
+                _logger.LogError($"Failed to get all trips fromt he database: {ex}");
                 return BadRequest("Error Occured");
             }
         }
 
         [HttpPost("")]
-        public IActionResult Post([FromBody]TripViewModel tripViewModel)
+        public async Task<IActionResult> Create([FromBody]TripViewModel tripViewModel)
         {
             if (ModelState.IsValid) 
             {
                 var newTrip = Mapper.Map<Trip>(tripViewModel);
-                return Created($"api/trips/{newTrip.Name}", Mapper.Map<TripViewModel>(newTrip));
+                _repository.AddTrip(newTrip);
+
+                if (await _repository.SaveChangesAsync())
+                {
+                    return Created($"api/trips/{newTrip.Name}", Mapper.Map<TripViewModel>(newTrip));
+                }
+
+                return BadRequest("Failed to write data to the database");
             }
 
             return BadRequest(ModelState);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using TripPlanner.Models;
@@ -21,6 +22,16 @@ namespace TripPlanner.Data
         {
             _logger.LogInformation("Getting all trips from the database");
             return _context.Trips.ToList();
+        }
+
+        public void AddTrip(Trip trip)
+        {
+            _context.Add(trip);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync()) > 0;
         }
     }
 }
