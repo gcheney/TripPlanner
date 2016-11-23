@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using TripPlanner.Models;
 
@@ -32,6 +34,14 @@ namespace TripPlanner.Data
         public async Task<bool> SaveChangesAsync()
         {
             return (await _context.SaveChangesAsync()) > 0;
+        }
+
+        public Trip GetTripByName(string tripName)
+        {
+            return _context.Trips
+                            .Include(t => t.Stops)
+                            .Where(t => t.Name == tripName)
+                            .FirstOrDefault();
         }
     }
 }

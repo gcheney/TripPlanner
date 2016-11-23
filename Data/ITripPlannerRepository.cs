@@ -11,5 +11,7 @@ namespace TripPlanner.Data
         void AddTrip(Trip trip);
 
         Task<bool> SaveChangesAsync();
+
+        Trip GetTripByName(string tripName);
     }
 }
