@@ -17,11 +17,15 @@ namespace TripPlanner.Controllers.Api
     {
         private ITripPlannerRepository _repository;
         private ILogger<StopsController> _logger;
+        private GeoCoordsService _coordsService;
 
-        public StopsController(ITripPlannerRepository repository, ILogger<StopsController> logger)
+        public StopsController(ITripPlannerRepository repository, 
+            ILogger<StopsController> logger,
+            GeoCoordsService coordsService)
         {
             _repository = repository;
             _logger = logger;
+            _coordsService = coordsService;
         }
 
         [HttpGet("")]
@@ -43,22 +47,48 @@ namespace TripPlanner.Controllers.Api
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> Create([FromBody]StopViewModel vm)
+        public async Task<IActionResult> Create(string tripName, [FromBody]StopViewModel vm)
         {
-            if (ModelState.IsValid) 
+            try
             {
-                var newTrip = Mapper.Map<Trip>(vm);
-                _repository.AddTrip(newTrip);
-
-                if (await _repository.SaveChangesAsync())
+                // If the VM is valid
+                if (ModelState.IsValid)
                 {
-                    return Created($"api/trips/{newTrip.Name}", Mapper.Map<TripViewModel>(newTrip));
+                    var newStop = Mapper.Map<Stop>(vm);
+
+                    // Lookup the Geocodes
+                    var result = await _coordsService.GetCoordsAsync(newStop.Name);
+
+                    if (!result.Success)
+                    {
+                        _logger.LogError(result.Message);
+                    }
+                    else
+                    {
+                        newStop.Latitude = result.Latitude;
+                        newStop.Longitude = result.Longitude;
+
+                        // Save to the Database
+                        _repository.AddStop(tripName, newStop);
+
+                        if (await _repository.SaveChangesAsync())
+                        {
+                            return Created($"/api/trips/{tripName}/stops/{newStop.Name}",
+                                Mapper.Map<StopViewModel>(newStop));
+                        }
+                    }
                 }
-                
-                return BadRequest("Failed to write data to the database");
+                else 
+                {
+                    return BadRequest("Model state not valid");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to save new Stop: {0}", ex);
             }
 
-            return BadRequest(ModelState);
+            return BadRequest("Failed to save new stop");
         }
     }
 }

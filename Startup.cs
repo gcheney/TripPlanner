@@ -44,6 +44,8 @@ namespace TripPlanner
 
             services.AddTransient<TripPlannerSeedData>();
 
+            services.AddTransient<GeoCoordsService>();
+
             services.AddScoped<ITripPlannerRepository, TripPlannerRepository>();
             
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
