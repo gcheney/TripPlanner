@@ -80,10 +80,11 @@ namespace TripPlanner
                 loggerFactory.AddDebug(LogLevel.Error);
             }
 
-            // mapping
+            // automapper config
             Mapper.Initialize(config => 
             {
                 config.CreateMap<TripViewModel, Trip>().ReverseMap();
+                config.CreateMap<StopViewModel, Stop>().ReverseMap();
             });
 
             app.UseStaticFiles();

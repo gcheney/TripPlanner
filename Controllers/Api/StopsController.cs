@@ -12,6 +12,7 @@ using AutoMapper;
 
 namespace TripPlanner.Controllers.Api
 {
+    [Route("/api/trips/{tripName}/stops")]
     public class StopsController : Controller
     {
         private ITripPlannerRepository _repository;
@@ -23,13 +24,15 @@ namespace TripPlanner.Controllers.Api
             _logger = logger;
         }
 
+        [HttpGet("")]
         public IActionResult GetAll(string tripName)
         {
             try
             {
                 var trip = _repository.GetTripByName(tripName);
+                var stops = trip.Stops.OrderBy(s => s.Order).ToList();
 
-                return Ok(trip.Stops.OrderBy(s => s.Order).ToList());
+                return Ok(Mapper.Map<IEnumerable<StopViewModel>>(stops));
             }
             catch (Exception ex)
             {
