@@ -41,5 +41,24 @@ namespace TripPlanner.Controllers.Api
 
             return BadRequest("Unable to complete request");
         }
+
+        [HttpPost("")]
+        public async Task<IActionResult> Create([FromBody]StopViewModel vm)
+        {
+            if (ModelState.IsValid) 
+            {
+                var newTrip = Mapper.Map<Trip>(vm);
+                _repository.AddTrip(newTrip);
+
+                if (await _repository.SaveChangesAsync())
+                {
+                    return Created($"api/trips/{newTrip.Name}", Mapper.Map<TripViewModel>(newTrip));
+                }
+                
+                return BadRequest("Failed to write data to the database");
+            }
+
+            return BadRequest(ModelState);
+        }
     }
 }

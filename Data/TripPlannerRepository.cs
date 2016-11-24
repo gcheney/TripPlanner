@@ -31,17 +31,27 @@ namespace TripPlanner.Data
             _context.Add(trip);
         }
 
-        public async Task<bool> SaveChangesAsync()
-        {
-            return (await _context.SaveChangesAsync()) > 0;
-        }
-
         public Trip GetTripByName(string tripName)
         {
             return _context.Trips
                             .Include(t => t.Stops)
                             .Where(t => t.Name == tripName)
                             .FirstOrDefault();
+        }
+
+        public void AddStop(string tripName, Stop stop)
+        {
+            var trip = GetTripByName(tripName);
+
+            if (trip != null)
+            {
+                trip.Stops.Add(stop);
+            }
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync()) > 0;
         }
     }
 }

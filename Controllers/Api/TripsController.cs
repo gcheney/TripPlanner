@@ -40,11 +40,11 @@ namespace TripPlanner.Controllers.Api
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> Create([FromBody]TripViewModel tripViewModel)
+        public async Task<IActionResult> Create([FromBody]TripViewModel vm)
         {
             if (ModelState.IsValid) 
             {
-                var newTrip = Mapper.Map<Trip>(tripViewModel);
+                var newTrip = Mapper.Map<Trip>(vm);
                 _repository.AddTrip(newTrip);
 
                 if (await _repository.SaveChangesAsync())
