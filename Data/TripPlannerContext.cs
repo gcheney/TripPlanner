@@ -1,18 +1,24 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using TripPlanner.Models;
 
 namespace TripPlanner.Data
 {
-    public class TripPlannerContext : DbContext
+    public class TripPlannerContext : IdentityDbContext<User>
     {
         private IConfigurationRoot _config;
+        private UserManager<User> _userManager;
 
         public TripPlannerContext(IConfigurationRoot config, DbContextOptions options) 
             : base(options)
         {
             _config = config;
         }
+
+        public DbSet<Trip> Trips { get; set; }
+        public DbSet<Stop> Stops { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,9 +31,8 @@ namespace TripPlanner.Data
                 .HasOne(s => s.Trip)
                 .WithMany(t => t.Stops)
                 .IsRequired();
-        }
 
-        public DbSet<Trip> Trips { get; set; }
-        public DbSet<Stop> Stops { get; set; }
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

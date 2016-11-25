@@ -3,27 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TripPlanner.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace TripPlanner.Data
 {
   public class TripPlannerSeedData
   {
     private TripPlannerContext _context;
+    private UserManager<User> _userManager;
 
-    public TripPlannerSeedData(TripPlannerContext context)
+    public TripPlannerSeedData(TripPlannerContext context, UserManager<User> userManager)
     {
       _context = context;
     }
 
     public async Task EnsureSeedData()
     {
+      var userEmail = "admin@tripplanner.com";
+      if (await _userManager.FindByEmailAsync(userEmail) == null)
+      {
+        var user = new User()
+        {
+          UserName = "genericuser",
+          Email = userEmail
+        };
+
+        await _userManager.CreateAsync(user, "P@ssw0rd!");
+      }
+
       if (!_context.Trips.Any())
       {
         var usTrip = new Trip()
         {
           DateCreated = DateTime.UtcNow,
           Name = "US Trip",
-          UserName = "", // TODO Add UserName
+          UserName = "genericuser", 
           Stops = new List<Stop>()
           {
             new Stop() {  Name = "Atlanta, GA", ArrivalTime = new DateTime(2014, 6, 4), Latitude = 33.748995, Longitude = -84.387982, Order = 0 },
@@ -42,7 +56,7 @@ namespace TripPlanner.Data
         {
           DateCreated = DateTime.UtcNow,
           Name = "WorldTrip",
-          UserName = "", // TODO Add UserName
+          UserName = "genericuser", 
           Stops = new List<Stop>()
           {
             new Stop() { Order = 0, Latitude =  33.748995, Longitude =  -84.387982, Name = "Atlanta, Georgia", ArrivalTime = DateTime.Parse("Jun 3, 2014") },

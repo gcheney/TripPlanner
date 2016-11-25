@@ -8,9 +8,10 @@ using TripPlanner.Data;
 namespace TripPlanner.Migrations
 {
     [DbContext(typeof(TripPlannerContext))]
-    partial class TripPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20161125171545_AddingIdentity")]
+    partial class AddingIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1");
